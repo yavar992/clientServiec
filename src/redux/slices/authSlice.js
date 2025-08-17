@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import StatusCode from "../../utils/StatusCode";
 import api from "../../services/api";
 
@@ -8,10 +7,14 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('https://foodapp-env.eba-db8ewiut.eu-north-1.elasticbeanstalk.com/api/v1/user/register', userData);
-        const { jwt, email, userName, role } = response.data.payload;
-        // localStorage.setItem('jwtToken', jwt);
-        return { token: jwt, user: { email, userName, role }, message: response.data.message };
+      const response = await api.post("/user/register", userData);
+      const { jwt, email, userName, role } = response.data.payload;
+      localStorage.setItem("jwtToken", jwt); // Store token immediately after registration
+      return {
+        token: jwt,
+        user: { email, userName, role },
+        message: response.data.message,
+      };
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -23,15 +26,14 @@ export const loginUser = createAsyncThunk(
   "auth/loginuser",
   async (credentials, { rejectWithValue }) => {
     try {
-        const response = await axios.post('https://foodapp-env.eba-db8ewiut.eu-north-1.elasticbeanstalk.com/api/v1/user/login', credentials, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-
-        });
-        const { jwt, email, userName, role } = response.data.payload;
-        localStorage.setItem('jwtToken', jwt);
-        return { token: jwt, user: { email, userName, role }, message: response.data.message, };
+      const response = await api.post("/user/login", credentials);
+      const { jwt, email, userName, role } = response.data.payload;
+      localStorage.setItem("jwtToken", jwt);
+      return {
+        token: jwt,
+        user: { email, userName, role },
+        message: response.data.message,
+      };
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
