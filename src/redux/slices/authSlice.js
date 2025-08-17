@@ -6,7 +6,7 @@ import api from "../../services/api";
 //async thunk for registering a user
 export const registerUser = createAsyncThunk('auth/registerUser', async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('http://localhost:8080/api/v1/user/register', userData);
+        const response = await axios.post('https://foodapp-env.eba-db8ewiut.eu-north-1.elasticbeanstalk.com/api/v1/user/register', userData);
         const { jwt, email, userName, role } = response.data.payload;
         // localStorage.setItem('jwtToken', jwt);
         return { token: jwt, user: { email, userName, role }, message: response.data.message };
@@ -18,7 +18,7 @@ export const registerUser = createAsyncThunk('auth/registerUser', async (userDat
 //async thunk for logging in a user
 export const loginUser = createAsyncThunk('auth/loginuser', async (credentials, { rejectWithValue }) => {
     try {
-        const response = await axios.post('http://localhost:8080/api/v1/user/login', credentials, {
+        const response = await axios.post('https://foodapp-env.eba-db8ewiut.eu-north-1.elasticbeanstalk.com/api/v1/user/login', credentials, {
             headers: {
                 'Content-Type': 'application/json'
             }
